@@ -1,3 +1,4 @@
+from re import A
 import time
 from concurrent.futures import thread
 import imp
@@ -14,45 +15,91 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
+import pyautogui as pya
+import pyperclip  # handy cross-platform clipboard text handler
+import time
 
+
+
+def copy_clipboard():
+    sleep(2)
+    pya.hotkey('ctrl', 'a')
+    sleep(1)
+    pya.hotkey('ctrl', 'c')
 
 
 
 def login():
     driver.find_element_by_name("_username").send_keys("nafiz.hossain@tigerit.com")
-    driver.find_element_by_name("_password").send_keys("life129261")
-    
+    #driver.implicitly_wait(1)
+    driver.find_element_by_name("_password").send_keys("Life129261")
+    #driver.implicitly_wait(1)
     button = driver.find_element_by_xpath("//button[text()='Login']")
-    driver.implicitly_wait(10)
+    #driver.implicitly_wait(10)
     ActionChains(driver).move_to_element(button).click(button).perform()
 
 
 def createTask():
+    duration = 1
+    customer= "International Consumer"
+    project="CommChat Desktop"
+    Activity= "Testing"
+    
     #customer
     driver.get("https://timetracker.tigeritbd.com/index.php/en/timesheet/create")
-    button = driver.find_element_by_id("select2-timesheet_edit_form_customer-container")
-    driver.implicitly_wait(10)
-    ActionChains(driver).move_to_element(button).click(button).perform()
-    button.send_keys("International consumer")
+    timeout = 5
+    element_present = EC.presence_of_element_located((By.ID,'timesheet_edit_form_duration'))
+    WebDriverWait(driver, timeout).until(element_present)
+  
+
+   
+    actions = ActionChains(driver) 
+    actions.send_keys(duration)
+   
+    #customer
+    actions.send_keys(Keys.TAB)
+    actions.send_keys(Keys.TAB)
+    actions.send_keys(Keys.ENTER)
+    actions.send_keys(customer)
+    actions.send_keys(Keys.ENTER)
+
+    #Project
+    actions.send_keys(Keys.TAB)
+    actions.send_keys(Keys.ENTER)
+    actions.send_keys(project)
+    actions.send_keys(Keys.ENTER)
+    
+    #Activity
+    actions.send_keys(Keys.TAB)
+    actions.send_keys(Keys.ENTER)
+    actions.send_keys(Activity)
+    actions.send_keys(Keys.ENTER)
+  
+    #Description
+    actions.send_keys(Keys.TAB)
+    description = (pyperclip.paste())
+    actions.send_keys(description)
+    actions.send_keys(Keys.TAB)
+    actions.send_keys(Keys.TAB) 
+    actions.send_keys(Keys.TAB)
+    actions.send_keys(Keys.ENTER)
 
 
-    #button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'select2-timesheet_edit_form_customer-container')))
-    #driver.find_element_by_class_name("select2-search__field").send_keys("International Consumer")
-
-    # #project
-    # button = driver.find_element_by_class_name("timesheet_edit_form_duration")
-    # driver.implicitly_wait(10)
-    # ActionChains(driver).move_to_element(button)
-    driver.find_element_by_id("timesheet_edit_form_duration").send_keys("2")
-    #button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'timesheet_edit_form_duration')))
-
-
+    #perform all pending actions by Keys
+    actions.perform()
 
 
 
 if __name__ == '__main__':
+    copy_clipboard()
+
     PATH = '/home/tigerit/TigerIT/projects/Automation/Selenium/chromedriver'
     driver = webdriver.Chrome(PATH)
     driver.get("https://timetracker.tigeritbd.com/index.php/en/login")
+    timeout = 5
+    element_present = EC.presence_of_element_located((By.ID,'remember_me'))
+    WebDriverWait(driver, timeout).until(element_present)
     login()
     createTask()
