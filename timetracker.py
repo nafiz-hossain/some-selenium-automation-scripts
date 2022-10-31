@@ -24,9 +24,8 @@ import time
 
 
 def copy_clipboard():
-    sleep(2)
-    pya.hotkey('ctrl', 'a')
     sleep(1)
+    pya.hotkey('ctrl', 'a')
     pya.hotkey('ctrl', 'c')
 
 
