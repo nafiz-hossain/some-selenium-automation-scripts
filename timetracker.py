@@ -33,7 +33,7 @@ def copy_clipboard():
 def login():
     driver.find_element_by_name("_username").send_keys("nafiz.hossain@tigerit.com")
     #driver.implicitly_wait(1)
-    driver.find_element_by_name("_password").send_keys("Life129261")
+    driver.find_element_by_name("_password").send_keys("life129261")
     #driver.implicitly_wait(1)
     button = driver.find_element_by_xpath("//button[text()='Login']")
     #driver.implicitly_wait(10)
@@ -45,7 +45,8 @@ def createTask():
     customer= "International Consumer"
     project="CommChat Desktop"
     Activity= "Testing"
-    
+    paste = (pyperclip.paste())
+
     #customer
     driver.get("https://timetracker.tigeritbd.com/index.php/en/timesheet/create")
     timeout = 5
@@ -71,6 +72,15 @@ def createTask():
     actions.send_keys(Keys.ENTER)
     
     #Activity
+    if ((paste[:3]) == "Inv"):
+        Activity= "Other"
+    if ((paste[:3]) == "Mee"):
+        Activity= "Meeting"
+    if ((paste[:3]) == "Fol"):
+            Activity= "Follow up"       
+    if ((paste[:3]) == "Rea"):
+        Activity= "Research"    
+
     actions.send_keys(Keys.TAB)
     actions.send_keys(Keys.ENTER)
     actions.send_keys(Activity)
@@ -78,7 +88,15 @@ def createTask():
   
     #Description
     actions.send_keys(Keys.TAB)
-    description = (pyperclip.paste())
+    description = "Checking the change of "+ paste
+    if ((paste[:3]) == "Inv"):
+        description = "Investigation on: " + paste.split(' ', 1)[1]
+    if ((paste[:3]) == "Mee"):
+        description= "Meeting regarding: "+ paste.split(' ', 1)[1]
+    if ((paste[:3]) == "Rea"):
+        description= "Studied about: " + paste.split(' ', 1)[1]
+    if ((paste[:3]) == "Fol"):
+            description= "Following up task: " + paste.split(' ', 1)[1]
     actions.send_keys(description)
     actions.send_keys(Keys.TAB)
     actions.send_keys(Keys.TAB) 
