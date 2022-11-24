@@ -120,3 +120,5 @@ if __name__ == '__main__':
     WebDriverWait(driver, timeout).until(element_present)
     login()
     createTask()
+    driver.close()
+
